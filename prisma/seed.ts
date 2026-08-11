@@ -5,6 +5,7 @@ async function main() {
   console.log("DATABASE_URL:", process.env.DATABASE_URL);
   const hashedPassword = await bcrypt.hash("admin123", 10);
   const userPassword = await bcrypt.hash("user123", 10);
+  const userPassword2 = await bcrypt.hash("user123", 10);
   // ADMIN
   await prisma.user.upsert({
     where: {
@@ -28,6 +29,19 @@ async function main() {
       name: "Normal User",
       email: "user@solutech.com",
       password: userPassword,
+      role: "USER",
+    },
+  });
+  // USER 2
+  await prisma.user.upsert({
+    where: {
+      email: "user2@solutech.com",
+    },
+    update: {},
+    create: {
+      name: "Normal User 2",
+      email: "user2@solutech.com",
+      password: userPassword2,
       role: "USER",
     },
   });

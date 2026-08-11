@@ -43,10 +43,10 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        statusCode: 401,
-        message: "Authentication required",
+        statusCode: 500,
+        message: "Internal Server Error",
       },
-      { status: 401 },
+      { status: 500 },
     );
   }
 }
@@ -62,7 +62,7 @@ export async function PUT(
   },
 ) {
   try {
-    const user = verifyAuth(req);
+    const user = await verifyAuth(req);
     if (user.role !== "ADMIN") {
       return NextResponse.json(
         {
@@ -102,10 +102,10 @@ export async function PUT(
     return NextResponse.json(
       {
         success: false,
-        statusCode: 401,
-        message: "Authentication required",
+        statusCode: 500,
+        message: "Internal Server Error",
       },
-      { status: 401 },
+      { status: 500 },
     );
   }
 }
@@ -121,7 +121,7 @@ export async function DELETE(
   },
 ) {
   try {
-    const user = verifyAuth(req);
+    const user = await verifyAuth(req);
 
     if (user.role !== "ADMIN") {
       return NextResponse.json(
@@ -153,10 +153,10 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        statusCode: 401,
-        message: "Authentication required",
+        statusCode: 500,
+        message: "Internal Server Error",
       },
-      { status: 401 },
+      { status: 500 },
     );
   }
 }

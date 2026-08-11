@@ -54,17 +54,17 @@ export async function GET(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        statusCode: 401,
-        message: "Authentication required",
+        statusCode: 500,
+        message: "Internal Server Error",
       },
-      { status: 401 },
+      { status: 500 },
     );
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const user = verifyAuth(req);
+    const user = await verifyAuth(req);
 
     if (user.role !== "ADMIN") {
       return NextResponse.json(
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         {
           success: false,
           statusCode: 400,
-          errors: validation.error.flatten(),
+          message: "Invalid Input",
         },
         { status: 400 },
       );
@@ -105,7 +105,7 @@ export async function POST(req: Request) {
       {
         success: false,
         statusCode: 500,
-        error,
+        message: "Internal Server Error",
       },
       { status: 500 },
     );
