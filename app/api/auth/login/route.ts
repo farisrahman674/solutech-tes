@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-
 import bcrypt from "bcryptjs";
-
 import { prisma } from "@/lib/prisma";
 import { generateToken } from "@/lib/jwt";
 
@@ -17,6 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
+          statusCode: 400,
           message: "Validation failed",
           errors: validation.error.flatten(),
         },
@@ -36,6 +35,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
+          statusCode: 401,
           message: "Invalid credentials",
         },
         { status: 401 },
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
+          statusCode: 401,
           message: "Invalid credentials",
         },
         { status: 401 },
@@ -60,9 +61,9 @@ export async function POST(req: Request) {
       role: user.role,
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
-      token,
+      token: token,
       user: {
         id: user.id,
         name: user.name,
@@ -70,11 +71,22 @@ export async function POST(req: Request) {
         role: user.role,
       },
     });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24, // 1 hari
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error,
+        statusCode: 500,
+        message: error,
       },
       { status: 500 },
     );

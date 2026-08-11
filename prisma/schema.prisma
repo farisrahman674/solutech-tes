@@ -23,6 +23,51 @@ model User {
   name      String
   role      Role     @default(USER)
 
+  orders    Order[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  description String?
+  price       Float
+  stock       Int
+  isDeleted   Boolean     @default(false)
+
+  orderItems  OrderItem[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Order {
+  id          String      @id @default(cuid())
+
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+
+  totalPrice  Float
+
+  items       OrderItem[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String    @id @default(cuid())
+
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id])
+
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id])
+
+  quantity    Int
+  price       Float
+
+  createdAt   DateTime  @default(now())
 }

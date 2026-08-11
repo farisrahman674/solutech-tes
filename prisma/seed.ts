@@ -32,6 +32,51 @@ async function main() {
     },
   });
 
+  // PRODUCTS
+  const products = [
+    {
+      name: "MacBook Air M3",
+      description: "Laptop Apple M3 13 inch",
+      price: 18999000,
+      stock: 10,
+    },
+    {
+      name: "iPhone 16 Pro",
+      description: "Apple flagship smartphone",
+      price: 20999000,
+      stock: 15,
+    },
+    {
+      name: "Samsung Galaxy S25",
+      description: "Samsung Android flagship",
+      price: 17999000,
+      stock: 12,
+    },
+    {
+      name: "Sony WH-1000XM5",
+      description: "Wireless noise cancelling headphone",
+      price: 5499000,
+      stock: 20,
+    },
+    {
+      name: "iPad Air M2",
+      description: "Apple tablet with M2 chip",
+      price: 11999000,
+      stock: 8,
+    },
+  ];
+
+  for (const product of products) {
+    await prisma.product.upsert({
+      where: {
+        name: product.name,
+      },
+      update: {},
+      create: product,
+    });
+  }
+
+  console.log("✅ Products seeded");
   console.log("✅ Admin seeded");
   console.log("✅ User seeded");
 }
