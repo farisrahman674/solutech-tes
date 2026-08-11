@@ -1,36 +1,244 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Solutech Technical Test - Backend Developer
 
-## Getting Started
+Backend API sederhana untuk modul e-commerce menggunakan Next.js, Prisma, dan PostgreSQL.
 
-First, run the development server:
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- Prisma ORM
+- PostgreSQL (Supabase PostgreSQL)
+- JWT Authentication
+- Zod Validation
+
+---
+
+## Features
+
+### Authentication
+
+- Login menggunakan JWT
+- JWT disimpan pada httpOnly Cookie
+- Protected Route menggunakan Middleware
+- Role Based Access (ADMIN & USER)
+
+### Product
+
+- Create Product
+- Get All Product
+- Get Product Detail
+- Update Product
+- Soft Delete Product
+- Search Product
+- Pagination Product
+
+### Order
+
+- Create Order
+- Update Stock otomatis saat Order berhasil
+- Perhitungan Total Price otomatis
+- Menampilkan daftar Order milik User yang sedang login
+
+### Validation & Error Handling
+
+- Validasi input menggunakan Zod
+- Consistent Error Response
+- HTTP Status Code sesuai kebutuhan (200, 201, 400, 401, 403, 404, 500)
+
+### Bonus
+
+- Frontend sederhana untuk Admin CRUD Product
+- Frontend sederhana untuk User Product & My Orders
+
+---
+
+## Database
+
+Project ini menggunakan PostgreSQL lokal (Seperti pgAdmin4) selama nilai `DATABASE_URL` disesuaikan.
+
+---
+
+## Environment Variables
+
+Buat file `.env`
+
+```env
+DATABASE_URL="postgresql://postgres:<Password>@localhost:5432/<nama database>"
+JWT_SECRET="super-secret-key"
+NODE_ENV=production
+```
+
+Keterangan:
+
+- DATABASE_URL : PostgreSQL Connection String
+- JWT_SECRET : Secret Key untuk JWT Authentication
+
+---
+
+## Installation
+
+### Option 1 - Clone Repository
+
+```bash
+git clone https://github.com/farisrahman674/solutech-tes.git
+cd solutech-tes
+npm install
+```
+
+### Option 2 - Download ZIP
+
+1. Buka repository GitHub https://github.com/farisrahman674/solutech-tes.git
+2. Klik **Code**
+3. Klik **Download ZIP**
+4. Extract file ZIP
+5. Buka folder hasil extract menggunakan VS Code
+6. Jalankan command:
+
+```bash
+npm install
+```
+
+---
+
+## Database Setup
+
+### Harus mempunyai aplikasi mendukung PostgreSQL Local seperti pgAdmin4 dan membuat database nya
+
+### Untuk tabel tinggal melakukan migrate karena sudah otomatis membuat tabel
+
+Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+Jalankan Migration
+
+```bash
+npx prisma migrate deploy
+```
+
+atau
+
+```bash
+npx prisma migrate dev
+```
+
+---
+
+## Seed Database
+
+```bash
+npx prisma db seed
+```
+
+Menambahkan data awal:
+
+- 1 Admin
+- 2 User
+- Beberapa Product
+
+---
+
+## Run Project
+
+Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Project akan berjalan di:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Default Account
 
-To learn more about Next.js, take a look at the following resources:
+### Admin
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```txt
+email: admin@solutech.com
+password: admin123
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### User
 
-## Deploy on Vercel
+```txt
+email: user@solutech.com
+password: user123
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```txt
+email: user2@solutech.com
+password: user123
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## SQL File
+
+File SQL create table tersedia pada:
+
+```txt
+/database.sql
+```
+
+note: database sudah terbentuk dari migrate database
+
+---
+
+## Postman Collection
+
+Postman Collection tersedia pada:
+
+```txt
+/Solutech.postman_collection.json
+```
+
+Berisi:
+
+- Authentication
+- Product CRUD
+- Order
+- Protected Endpoint Example
+
+### Authentication
+
+| Method | Endpoint        | Access |
+| ------ | --------------- | ------ |
+| POST   | /api/auth/login | Public |
+
+### Product
+
+| Method | Endpoint                      | Access       |
+| ------ | ----------------------------- | ------------ |
+| GET    | /api/products                 | User / Admin |
+| GET    | /api/products?page=1&limit=10 | User / Admin |
+| GET    | /api/products?search=iphone   | User / Admin |
+| GET    | /api/products/:id             | User / Admin |
+| POST   | /api/products                 | Admin        |
+| PUT    | /api/products/:id             | Admin        |
+| DELETE | /api/products/:id             | Admin        |
+
+### Order
+
+| Method | Endpoint   | Access |
+| ------ | ---------- | ------ |
+| POST   | /api/order | User   |
+| GET    | /api/order | User   |
+
+## Assumptions & Technical Decisions
+
+- Soft Delete menggunakan field `isDeleted`
+- Product yang sudah dihapus tidak tampil pada User
+- Product yang sudah dihapus tetap dapat dilihat oleh Admin
+- JWT disimpan pada httpOnly Cookie untuk meningkatkan keamanan
+- Order dan pengurangan stock dijalankan dalam satu database transaction untuk menjaga konsistensi data
+
+## Author
+
+Faris Rahman Shalih
