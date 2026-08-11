@@ -5,7 +5,7 @@ import { createProductSchema } from "@/validations/product.validation";
 
 export async function GET(req: Request) {
   try {
-    verifyAuth(req);
+    const user = await verifyAuth(req);
     const { searchParams } = new URL(req.url);
 
     const page = Number(searchParams.get("page") ?? 1);
@@ -14,7 +14,9 @@ export async function GET(req: Request) {
     const skip = (page - 1) * limit;
 
     const where = {
-      isDeleted: false,
+      ...(user.role !== "ADMIN" && {
+        isDeleted: false,
+      }),
 
       ...(search && {
         name: {
