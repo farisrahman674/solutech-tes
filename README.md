@@ -7,9 +7,25 @@ Backend API sederhana untuk modul e-commerce menggunakan Next.js, Prisma, dan Po
 - Next.js (App Router)
 - TypeScript
 - Prisma ORM
-- PostgreSQL (Supabase PostgreSQL)
+- PostgreSQL
 - JWT Authentication
 - Zod Validation
+
+---
+
+## Requirements
+
+Pastikan sudah terinstall:
+
+- Node.js 20+
+- npm
+- PostgreSQL
+- Git (jika menggunakan Clone Repository)
+
+Recommended:
+
+- VS Code
+- pgAdmin4
 
 ---
 
@@ -43,35 +59,12 @@ Backend API sederhana untuk modul e-commerce menggunakan Next.js, Prisma, dan Po
 
 - Validasi input menggunakan Zod
 - Consistent Error Response
-- HTTP Status Code sesuai kebutuhan (200, 201, 400, 401, 403, 404, 500)
+- HTTP Status Code sesuai kebutuhan
 
 ### Bonus
 
 - Frontend sederhana untuk Admin CRUD Product
 - Frontend sederhana untuk User Product & My Orders
-
----
-
-## Database
-
-Project ini menggunakan PostgreSQL lokal (Seperti pgAdmin4) selama nilai `DATABASE_URL` disesuaikan.
-
----
-
-## Environment Variables
-
-Buat file `.env`
-
-```env
-DATABASE_URL="postgresql://postgres:<Password>@localhost:5432/<nama database>"
-JWT_SECRET="super-secret-key"
-NODE_ENV=production
-```
-
-Keterangan:
-
-- DATABASE_URL : PostgreSQL Connection String
-- JWT_SECRET : Secret Key untuk JWT Authentication
 
 ---
 
@@ -100,11 +93,42 @@ npm install
 
 ---
 
+## Environment Variables
+
+Buat file `.env`
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/solutech"
+JWT_SECRET="super-secret-key"
+NODE_ENV=development
+```
+
+Keterangan:
+
+- DATABASE_URL: PostgreSQL connection string untuk database lokal. Sesuaikan username, password, host, port, dan nama database dengan konfigurasi PostgreSQL lokal Anda.
+
+Format umum:
+
+```
+DATABASE_URL="postgresql://<username>:<password>@localhost:5432/<nama-database>"
+```
+
+- JWT_SECRET: Secret key yang digunakan untuk JWT Authentication. Dapat diganti dengan nilai secret lain yang lebih aman.
+- NODE_ENV: Menentukan environment aplikasi. Gunakan `development` untuk menjalankan project secara lokal.
+
+---
+
 ## Database Setup
 
-### Harus mempunyai aplikasi mendukung PostgreSQL Local seperti pgAdmin4 dan membuat database nya
+Project ini menggunakan PostgreSQL lokal.
 
-### Untuk tabel tinggal melakukan migrate karena sudah otomatis membuat tabel
+Pastikan:
+
+- PostgreSQL sudah terinstall dan sedang berjalan
+- Database sudah dibuat
+- Konfigurasi `DATABASE_URL` sudah sesuai
+
+Anda dapat menggunakan pgAdmin4 untuk membuat dan mengelola database.
 
 Generate Prisma Client
 
@@ -115,14 +139,10 @@ npx prisma generate
 Jalankan Migration
 
 ```bash
-npx prisma migrate deploy
-```
-
-atau
-
-```bash
 npx prisma migrate dev
 ```
+
+Migration akan otomatis membuat tabel yang dibutuhkan.
 
 ---
 
@@ -187,7 +207,8 @@ File SQL create table tersedia pada:
 /database.sql
 ```
 
-note: database sudah terbentuk dari migrate database
+> Tidak perlu menjalankan file `database.sql` secara manual.
+> Struktur database akan dibuat otomatis melalui Prisma Migration.
 
 ---
 
@@ -196,8 +217,10 @@ note: database sudah terbentuk dari migrate database
 Postman Collection tersedia pada:
 
 ```txt
-/Solutech.postman_collection.json
+/Solutech.json
 ```
+
+Import file `Solutech.json` ke Postman untuk mencoba API.
 
 Berisi:
 
